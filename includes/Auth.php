@@ -4,22 +4,28 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 class Auth {
-    public static function generateToken($user_id) {
+    private static $secret_key = "tu_clave_secreta"; // Usa la misma clave en config.php
+    private static $algorithm = "HS256"; 
+
+    public static function generateToken($data) {
         $payload = [
+            "iss" => "apitripnow",
             "iat" => time(),
             "exp" => time() + (60 * 60), // Expira en 1 hora
-            "sub" => $user_id
+            "consecutivo" => $data["consecutivo"], 
+            "email" => $data["email"]
         ];
-        return JWT::encode($payload, SECRET_KEY, 'HS256');
+
+        return JWT::encode($payload, self::$secret_key, self::$algorithm);
     }
 
     public static function verifyToken($token) {
         try {
-            $decoded = JWT::decode($token, new Key(SECRET_KEY, 'HS256'));
-            return $decoded;
+            return JWT::decode($token, new Key(self::$secret_key, self::$algorithm));
         } catch (Exception $e) {
             return false;
         }
     }
 }
+
 ?>
