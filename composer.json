@@ -1,0 +1,13 @@
+{
+    "name": "mario/apitripnow",
+    "description": "developer",
+    "authors": [
+        {
+            "name": "TripnowDev",
+            "email": "channaalmario@gmail.com"
+        }
+    ],
+    "require": {
+        "firebase/php-jwt": "^6.11"
+    }
+}
