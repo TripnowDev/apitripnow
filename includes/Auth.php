@@ -11,7 +11,7 @@ class Auth {
         $payload = [
             "iss" => "apitripnow",
             "iat" => time(),
-            "exp" => time() + (60 * 60), // Expira en 1 hora
+            "exp" => time() + (3 * 60 * 60), // Expira en 3 hora (10800 segundos)
             "consecutivo" => $data["consecutivo"], 
             "email" => $data["email"]
         ];

@@ -22,7 +22,6 @@ if (!$decoded) {
     exit;
 }
 
-// Verificar si el token tiene los datos esperados
 if (!isset($decoded->consecutivo) || !isset($decoded->email)) {
     echo json_encode(["error" => "Token inválido o incompleto"]);
     exit;
@@ -35,8 +34,20 @@ $email = $decoded->email;
 $model = new Model();
 $reservaciones = $model->obtenerReservaciones($consecutivo, $email);
 
-if (!empty($reservaciones)) {
-    echo json_encode(["status" => "success", "data" => $reservaciones]);
+$agrupados = [];
+
+foreach ($reservaciones as $reserva) {
+    $tipo_servicio = $reserva["tipo_servicio"];
+
+    if (!isset($agrupados[$tipo_servicio])) {
+        $agrupados[$tipo_servicio] = [];
+    }
+
+    $agrupados[$tipo_servicio][] = $reserva;
+}
+
+if (!empty($agrupados)) {
+    echo json_encode(["status" => "success", "data" => $agrupados], JSON_UNESCAPED_UNICODE);
 } else {
     echo json_encode(["status" => "error", "message" => "No se encontraron reservaciones"]);
 }
