@@ -14,7 +14,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 // Validar entrada
 if (!isset($data['consecutivo']) || !isset($data['email'])) {
     http_response_code(400);
-    echo json_encode(["error" => "Faltan datos obligatorios"]);
+    echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
     exit;
 }
 
@@ -23,7 +23,33 @@ $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
 
 if (!$email) {
     http_response_code(400);
-    echo json_encode(["error" => "El email proporcionado no es válido"]);
+    echo json_encode(["status" => "error", "message" => "El email proporcionado no es válido"]);
+    exit;
+}
+
+$sql = "SELECT id FROM reservations WHERE consecutivo = :consecutivo";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(":consecutivo", $consecutivo);
+$stmt->execute();
+$consecutivoResult = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$sql = "SELECT id FROM customers WHERE email = :email";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(":email", $email);
+$stmt->execute();
+$emailResult = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$consecutivoResult && !$emailResult) {
+    http_response_code(401);
+    echo json_encode(["status" => "error", "message" => "El consecutivo y el email no coinciden"]);
+    exit;
+} elseif (!$consecutivoResult) {
+    http_response_code(401);
+    echo json_encode(["status" => "error", "message" => "El consecutivo no existe"]);
+    exit;
+} elseif (!$emailResult) {
+    http_response_code(401);
+    echo json_encode(["status" => "error", "message" => "El email no existe"]);
     exit;
 }
 
@@ -39,7 +65,7 @@ $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$result) {
     http_response_code(401);
-    echo json_encode(["error" => "El consecutivo y el email no coinciden"]);
+    echo json_encode(["status" => "error", "message" => "El consecutivo y el email no coinciden"]);
     exit;
 }
 
