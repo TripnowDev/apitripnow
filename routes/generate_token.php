@@ -72,7 +72,8 @@ if (!$result) {
 // Generar token JWT con consecutivo y email
 $token = Auth::generateToken([
     "consecutivo" => $consecutivo,
-    "email" => $email
+    "email" => $email,
+    "id_reserva" => $result['id']
 ]);
 
 http_response_code(200);

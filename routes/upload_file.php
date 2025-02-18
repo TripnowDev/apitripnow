@@ -22,7 +22,9 @@ if (!$decoded) {
 }
 
 // Obtener el `id_reservation` desde el token
-$id_reservation = $decoded->id; 
+$decoded = Auth::verifyToken($token);
+$id_reservation = $decoded->id_reserva; 
+
 
 if (!isset($_FILES['file'])) {
     echo json_encode(["error" => "No se envió ningún archivo"]);

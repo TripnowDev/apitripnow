@@ -13,7 +13,8 @@ class Auth {
             "iat" => time(),
             "exp" => time() + (3 * 60 * 60), // Expira en 3 hora (10800 segundos)
             "consecutivo" => $data["consecutivo"], 
-            "email" => $data["email"]
+            "email" => $data["email"],
+            "id_reserva" => $data["id_reserva"]
         ];
 
         return JWT::encode($payload, self::$secret_key, self::$algorithm);
