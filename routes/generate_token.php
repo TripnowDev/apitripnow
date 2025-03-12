@@ -1,4 +1,15 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// Manejar solicitudes OPTIONS (Preflight)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// Continúa con el código de tu API
 require_once '../config/config.php';
 require_once '../includes/Auth.php';
 require_once '../includes/Database.php';
